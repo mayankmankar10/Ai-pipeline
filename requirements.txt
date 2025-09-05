@@ -19,8 +19,8 @@ indic-transliteration==2.3.42
 regex==2023.8.8
 
 # Data processing
-pandas==2.1.1
-numpy==1.24.3
+
+
 
 # Utilities
 python-dotenv==1.0.0
