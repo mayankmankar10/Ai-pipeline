@@ -1,0 +1,470 @@
+# Hindi PDF Pipeline - .gitignore
+
+# ========================================
+# Sensitive Files - NEVER COMMIT THESE
+# ========================================
+
+# Google API Credentials
+credentials/
+*.json
+*credentials*.json
+service_account.json
+client_secret.json
+token.json
+oauth_token.json
+
+# Environment configuration files
+.env
+.env.local
+.env.production
+.env.staging
+*.env
+
+# API Keys and secrets
+*.key
+*.pem
+*.p12
+secrets/
+api_keys/
+
+# ========================================
+# Python
+# ========================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+.pytest_cache/*
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# ========================================
+# Project-specific Files
+# ========================================
+
+# Processing data and temporary files
+data/
+temp_downloads/
+temp/
+tmp/
+processed_files/
+*.tmp
+*.temp
+
+# Log files
+logs/
+*.log
+*.log.*
+*.out
+*.err
+
+# Output files
+output/
+results/
+reports/
+*.csv
+*.xlsx
+*.json
+!examples/*.json  # Keep example JSON files
+
+# Backup files
+*.bak
+*.backup
+*~
+.#*
+
+# Downloaded PDFs (temporary)
+*.pdf
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
+# File tracking databases
+processed_files.json
+tracking.json
+file_records.json
+
+# ========================================
+# Operating System Files
+# ========================================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ========================================
+# IDEs and Editors
+# ========================================
+
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.vimrc
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Atom
+.atom/
+
+# ========================================
+# Version Control
+# ========================================
+
+# Git
+.git/
+*.orig
+*.rej
+*.patch
+
+# Mercurial
+.hg/
+.hgignore
+.hgtags
+
+# SVN
+.svn/
+
+# ========================================
+# Jupyter Notebooks (if used)
+# ========================================
+
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# ========================================
+# Documentation Build
+# ========================================
+
+docs/_build/
+docs/build/
+_build/
+.doctrees/
+
+# ========================================
+# Package Managers
+# ========================================
+
+# npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================================
+# Miscellaneous
+# ========================================
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Large files (you might want to use Git LFS instead)
+*.bin
+*.dat
+*.exe
+*.msi
+
+# Temporary editor files
+*.tmp
+*.bak
+*.swp
+*~.nib
+
+# Thumbnails
+Thumbs.db
+
+# System files
+.DS_Store
+.DS_Store?
+
+# ========================================
+# Project Testing
+# ========================================
+
+# Test output
+test_output/
+test_results/
+.coverage
+htmlcov/
+
+# Mock data
+mock_data/
+test_data/
+sample_pdfs/
+
+# ========================================
+# Deployment
+# ========================================
+
+# Docker
+.dockerignore
+Dockerfile.*
+
+# Kubernetes
+*.yaml
+*.yml
+!docker-compose.yml  # Keep main docker compose file if needed
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# ========================================
+# Performance and Profiling
+# ========================================
+
+# Profiling data
+*.prof
+*.profile
+
+# Memory dumps
+*.hprof
+*.dump
+
+# ========================================
+# Security Scanning
+# ========================================
+
+# Bandit
+.bandit
+bandit-report.*
+
+# Safety
+safety-report.*
+
+# OCR and Image Processing
+tesseract_temp/
+ocr_temp/
+*.tiff
+*.tif
+*.png
+*.jpg
+*.jpeg
+temp_images/
+
+# Pipeline Status Files
+processing_status.json
+file_tracker.json
+pipeline_status.json
+
+# Google Drive Cache
+.google_drive_cache/
+google_drive_cache/
+
+# Large Model Files (if any)
+*.model
+*.pkl
+*.pickle
+
+# ========================================
+# Keep these files (exceptions)
+# ========================================
+
+# Keep example configuration
+!.env.template
+!.env.example
+
+# Keep README and documentation
+!README.md
+!SETUP.md
+!CONTRIBUTING.md
+!LICENSE
+
+# Keep requirements files
+!requirements.txt
+!requirements-dev.txt
+
+# Keep GitHub workflows (if any)
+!.github/
+
+# Keep example files
+!examples/
+!tests/
