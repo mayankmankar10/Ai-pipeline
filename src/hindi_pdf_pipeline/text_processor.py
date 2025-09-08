@@ -15,8 +15,16 @@ from typing import List, Dict, Tuple, Optional, Set, Any
 from dataclasses import dataclass
 from datetime import datetime
 
-from indic_transliteration import sanscript
-from indic_transliteration.sanscript import transliterate
+# First, try to use Indic NLP Library with proper setup
+try:
+    from indicnlp import common
+    from indicnlp.transliterate.unicode_transliterate import ItransTransliterator
+    INDIC_NLP_AVAILABLE = True
+except ImportError:
+    # Fallback to indic-transliteration with intelligent cleanup
+    from indic_transliteration import sanscript
+    from indic_transliteration.sanscript import transliterate
+    INDIC_NLP_AVAILABLE = False
 
 from .config import Config
 
@@ -67,8 +75,17 @@ class HindiTextProcessor:
         self._compile_patterns()
         
         # Initialize transliteration settings
+        if INDIC_NLP_AVAILABLE:
+            self.transliterator = ItransTransliterator(lang='hi')
+        else:
+            self.transliterator = None
+        
+        # Set up for fallback transliterator
         self.source_script = sanscript.DEVANAGARI
-        self.target_script = sanscript.ITRANS  # Can be changed to IAST, ISO, etc.
+        self.target_script = sanscript.ITRANS  # Using ITRANS for better control
+        
+        # Patterns for cleaning unwanted trailing vowels
+        self._init_cleanup_patterns()
         
         # Common Hindi words to filter out from names
         self.stop_words = {
@@ -84,6 +101,38 @@ class HindiTextProcessor:
             'श्री', 'श्रीमती', 'कुमार', 'कुमारी', 'डॉ', 'प्रो', 'मिस्टर', 'मिसेज',
             'बेटा', 'बेटी', 'पुत्र', 'पुत्री', 'पति', 'पत्नी', 'माता', 'पिता'
         }
+    
+    def _init_cleanup_patterns(self) -> None:
+        """Initialize patterns for cleaning unwanted transliteration artifacts."""
+        
+        # Common patterns that add unwanted trailing vowels
+        self.cleanup_patterns = [
+            # Remove trailing 'a' from common names that shouldn't have it
+            (r'\b(Ram)a\b', r'\1'),       # Rama -> Ram
+            (r'\b(Shyam)a\b', r'\1'),     # Shyama -> Shyam
+            (r'\b(Mohan)a\b', r'\1'),     # Mohana -> Mohan
+            (r'\b(Krishna)a\b', r'\1'),   # Krishnaa -> Krishna
+            (r'\b(Geeta)a\b', r'\1'),     # Geetaa -> Geeta
+            (r'\b(Sita)a\b', r'\1'),      # Sitaa -> Sita
+            (r'\b(Radha)a\b', r'\1'),     # Radhaa -> Radha
+            
+            # Clean up double vowels
+            (r'aa\b', 'a'),               # Remove trailing double 'a'
+            (r'ee\b', 'e'),               # Remove trailing double 'e'
+            (r'ii\b', 'i'),               # Remove trailing double 'i'
+            (r'oo\b', 'o'),               # Remove trailing double 'o'
+            (r'uu\b', 'u'),               # Remove trailing double 'u'
+            
+            # ITRANS specific cleanups
+            (r'\^', ''),                  # Remove ITRANS markers
+            (r'~', ''),                   # Remove ITRANS markers
+        ]
+        
+        # Compile patterns for performance
+        self.compiled_cleanup_patterns = [
+            (re.compile(pattern, re.IGNORECASE), replacement)
+            for pattern, replacement in self.cleanup_patterns
+        ]
     
     def _compile_patterns(self) -> None:
         """Compile regex patterns for efficient text processing."""
@@ -171,12 +220,15 @@ class HindiTextProcessor:
             if not clean_hindi:
                 return ""
             
-            # Transliterate using indic-transliteration library
-            transliterated = transliterate(
-                clean_hindi,
-                self.source_script,
-                self.target_script
-            )
+            if INDIC_NLP_AVAILABLE:
+                transliterated = self.transliterator.transliterate(clean_hindi)
+            else:
+                # Transliterate using indic-transliteration library
+                transliterated = transliterate(
+                    clean_hindi,
+                    self.source_script,
+                    self.target_script
+                )
             
             # Clean up transliteration artifacts
             transliterated = self._clean_transliteration(transliterated)
@@ -189,13 +241,13 @@ class HindiTextProcessor:
     
     def _clean_transliteration(self, text: str) -> str:
         """
-        Clean up transliteration artifacts and normalize output.
+        Clean up transliteration artifacts and normalize output using improved patterns.
         
         Args:
             text: Transliterated text
             
         Returns:
-            Cleaned transliterated text
+            Cleaned transliterated text with natural spelling
         """
         if not text:
             return ""
@@ -203,8 +255,9 @@ class HindiTextProcessor:
         # Remove extra spaces and normalize
         cleaned = re.sub(r'\s+', ' ', text).strip()
         
-        # Remove common transliteration artifacts
-        cleaned = re.sub(r'[~\^]', '', cleaned)
+        # Apply intelligent cleanup patterns to remove unwanted vowels
+        for pattern, replacement in self.compiled_cleanup_patterns:
+            cleaned = pattern.sub(replacement, cleaned)
         
         # Capitalize first letter of each word for names
         if self._looks_like_name(cleaned):

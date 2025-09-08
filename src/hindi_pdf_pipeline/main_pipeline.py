@@ -301,6 +301,11 @@ class HindiPDFPipeline:
             
             logger.info(f"Found {len(files)} PDF files in input folder")
             
+            # For testing: Process only the first file
+            if files:
+                logger.info("Processing only the first file for testing purposes...")
+                files = files[:1]
+            
             # Process each file
             processed_count = 0
             failed_count = 0
